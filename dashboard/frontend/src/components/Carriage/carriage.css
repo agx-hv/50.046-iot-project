@@ -1,0 +1,49 @@
+.carriage {
+    position: relative; /* Needed for positioning seats over the background */
+    width: 260px; 
+    height: 70px;
+    background-image: url('../../images/carriage.png');
+    background-size: cover;
+    background-position: center;
+    overflow: hidden; /* Ensure no content overflows */
+}
+
+.first-carriage {
+    position: relative;
+    width: 275px;
+    height: 70px;
+    background-image: url('../../images/first-carriage.png'); 
+    background-size: cover;
+    overflow: hidden;
+}
+
+.seats-container {
+    position: absolute; /* Position the seats container absolutely within the carriage */
+    width: 100%;
+    height: 100%; 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1; 
+    padding: 10px;
+    padding-left: 28px;
+    box-sizing: border-box;
+    gap: 3px;
+    border: none;
+}
+
+.first-seats-container {
+    position: absolute; /* Position the seats container absolutely within the carriage */
+    width: 100%;
+    height: 100%; 
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 1; 
+    padding: 10px;
+    padding-left: 50px;
+    box-sizing: border-box;
+    gap: 3px;
+}

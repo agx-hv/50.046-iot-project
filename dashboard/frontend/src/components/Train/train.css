@@ -1,0 +1,11 @@
+.train {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.carriage-label {
+    margin: 0 0;
+    margin-bottom: 4px;
+    font-size: 13px;
+}
