@@ -1,0 +1,19 @@
+[
+  {
+    "trainId": 0,
+    "carriages": [
+      { "carriageId": 0, "filledSeats": 2 },
+      { "carriageId": 1, "filledSeats": 4 },
+      { "carriageId": 2, "filledSeats": 6 }
+    ]
+  },
+  {
+    "trainId": 1,
+    "carriages": [
+      { "carriageId": 0, "filledSeats": 7 },
+      { "carriageId": 1, "filledSeats": 3 },
+      { "carriageId": 2, "filledSeats": 5 }
+    ]
+  }
+]
+  

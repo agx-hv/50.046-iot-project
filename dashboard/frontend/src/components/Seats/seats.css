@@ -1,0 +1,22 @@
+.seat {
+    width: 21px;
+    height: 21px;
+    border-radius: none;
+    border: solid 0.2px #000000;
+  }
+  
+  .seat.yellow {
+    background-color: #F8CF40;
+  }
+  
+  .seat.orange {
+    background-color: #F5944D;
+  }
+  
+  .seat.green {
+    background-color: #92C127;
+  }
+  
+  .seat.gray {
+    background-color: #E4E5E6;
+  }
