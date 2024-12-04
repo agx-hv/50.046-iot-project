@@ -3,9 +3,9 @@ import Train from './components/Train/Train.jsx';
 import { useEffect, useState } from 'react';
 
 function MainPage() {
-  const instructionList=  ['Select number of lights on for each carriage on both trains',
-                            'Click “Submit” button to set the initial number of lights',
-                            'Click “Simulate” button to run the crowd distribution on the lights'
+  const instructionList=  ['Select the number of lights to turn on for each carriage on both trains.',
+                            'Click the "Submit" button to set the initial number of lights.',
+                            'Click the "Simulate" button to run the crowd distribution simulation based on the selected lights.'
                           ];
 
   const [train1Data, setTrain1Data] = useState([
@@ -32,6 +32,7 @@ function MainPage() {
   const [showColors2, setShowColors2] = useState(false);
   const [isDataReceived2, setIsDataReceived2] = useState(false);
 
+  // Connect to Websocket for Train 1
   useEffect(() => {
     const ws1 = new WebSocket('ws://localhost:8080/train1');
 
@@ -51,10 +52,8 @@ function MainPage() {
         setIsCounterDisabled1(false);
       } else {
         const parsedMessage = JSON.parse(message);
-        console.log("Parsed message:", parsedMessage);
 
         const { trainId, carriageId, filledSeats } = parsedMessage;
-        console.log("trainId: ", trainId, "carriageId: ", carriageId, "filledSeats: ", filledSeats);
 
         // Update train data only when 'showColors' is true
         if (showColors1) {
@@ -85,6 +84,7 @@ function MainPage() {
     };
   }, [showColors1]);
 
+  // Connect to Websocket for Train 1
   useEffect(() => {
     const ws2 = new WebSocket('ws://localhost:8080/train1');
 
@@ -94,7 +94,6 @@ function MainPage() {
 
     ws2.onmessage = (event) => {
       const message = event.data;
-      console.log('Message received:', message);
 
       if (message === 'stop') {
         console.log('Simulation has stopped!');
@@ -104,10 +103,8 @@ function MainPage() {
         setIsCounterDisabled2(false);
       } else {
         const parsedMessage = JSON.parse(message);
-        console.log("Parsed message:", parsedMessage);
 
         const { trainId, carriageId, filledSeats } = parsedMessage;
-        console.log("trainId: ", trainId, "carriageId: ", carriageId, "filledSeats: ", filledSeats);
 
         // Update train data only when 'showColors' is true
         if (showColors2) {
@@ -171,8 +168,6 @@ function MainPage() {
       };
 
       ws1.send(JSON.stringify(seat1Data));
-      // ws1.send(train1Seats);
-      console.log('Submitted:', seat1Data);
     };
 
     ws1.onerror = (error) => {
