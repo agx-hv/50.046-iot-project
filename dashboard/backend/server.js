@@ -8,12 +8,6 @@ const CERT_PATH = "./cert/device-certificate.pem.crt";
 const KEY_PATH = "./cert/private.pem.key";
 const CA_PATH = "./cert/AmazonRootCA1.pem";
 
-// const ENDPOINT = "a2l6s1mki54p61-ats.iot.ap-southeast-1.amazonaws.com";
-// const CLIENT_ID = "MyMQTTClient";
-// const CERT_PATH = "./cert-gizelle/device-certificate.pem.crt";
-// const KEY_PATH = "./cert-gizelle/private.pem.key";
-// const CA_PATH = "./cert-gizelle/AmazonRootCA1.pem";
-
 // MQTT Topics
 const PUBLISH_TOPICS = [
   'pub/train1/init',
@@ -167,38 +161,8 @@ wss.on('connection', (ws) => {
   ws.on('message', (message) => {
     console.log("Message received from frontend:", message);
 
-    // const parsedMessage = message.toString();
-
-    // if (parsedMessage === 'start1') {
-    //   // Publish 'start' to the 'pub/train1/simulate' topic
-    //   connection.publish(PUBLISH_TOPICS[2], 'start', mqtt.QoS.AtMostOnce)
-    //     .then(() => {
-    //       console.log('Published "start" to MQTT topic: pub/simulate');
-    //     })
-    //     .catch((err) => {
-    //       console.error('Failed to publish "start" to MQTT:', err);
-    //     });
-    // } else if (parsedMessage === 'start2') {
-    //   // Publish 'start' to the 'pub/train2/simulate' topic
-    //   connection.publish(PUBLISH_TOPICS[3], 'start', mqtt.QoS.AtMostOnce)
-    //     .then(() => {
-    //       console.log('Published "start" to MQTT topic: pub/simulate');
-    //     })
-    //     .catch((err) => {
-    //       console.error('Failed to publish "start" to MQTT:', err);
-    //     });
-    // } else {
-    //   connection.publish(PUBLISH_TOPICS[0], parsedMessage, mqtt.QoS.AtMostOnce)
-    //     .then(() => {
-    //       console.log("Published data to MQTT topic 'pub/init':", parsedMessage);
-    //     })
-    //     .catch(err => {
-    //       console.error("Failed to publish to MQTT:", err);
-    //     });
-    // }
-
     try {
-      // Attempt to parse the message as JSON (for seat data submissions)
+      // Attempt to parse the message as JSON
       const parsedMessage = JSON.parse(message);
 
       // Handle seat data submission
@@ -221,9 +185,10 @@ wss.on('connection', (ws) => {
       }
 
     } catch (error) {
-      // If message is not JSON, handle it as a simple command like "start1" or "start2"
+      // If message is not JSON, handle it as a simple command
       if (message.toString() === 'start1') {
-        connection.publish(PUBLISH_TOPICS[2], 'start', mqtt.QoS.AtMostOnce) // pub/train1/simulate
+        // pub/train1/simulate
+        connection.publish(PUBLISH_TOPICS[2], 'start', mqtt.QoS.AtMostOnce)
           .then(() => {
             console.log('Published "start" to MQTT topic: pub/train1/simulate');
           })
@@ -231,7 +196,8 @@ wss.on('connection', (ws) => {
             console.error('Failed to publish "start" to MQTT:', err);
           });
       } else if (message.toString() === 'start2') {
-        connection.publish(PUBLISH_TOPICS[3], 'start', mqtt.QoS.AtMostOnce) // pub/train2/simulate
+        // pub/train2/simulate
+        connection.publish(PUBLISH_TOPICS[3], 'start', mqtt.QoS.AtMostOnce)
           .then(() => {
             console.log('Published "start" to MQTT topic: pub/train2/simulate');
           })
