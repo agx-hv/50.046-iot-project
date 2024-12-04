@@ -1,6 +1,5 @@
 import './mainPage.css';
 import Train from './components/Train/Train.jsx';
-import mockTrainData from './mockTrainData.json';
 import { ReactComponent as RightArrow} from './images/right-arrow.svg';
 import { useEffect, useState } from 'react';
 
@@ -10,31 +9,162 @@ function MainPage() {
                             'Click “Simulate” button to run the crowd distribution on the lights'
                           ];
 
-  const [trainData, setTrainData] = useState(mockTrainData)
+  const [train1Data, setTrain1Data] = useState([
+    { carriageId: 1, filledSeats: 0 },
+    { carriageId: 2, filledSeats: 0 },
+  ]);
 
-  const handleUpdateSeats = (trainId, carriageId, newFilledSeats) => {
-    // Update the specific carriage's filled seats in the corresponding train
-    // THIS WILL CHANGE ACCORDING TO JSON FILE
-    const updatedTrainData = trainData.map(train =>
-      train.trainId === trainId
-        ? {
-            ...train,
-            carriages: train.carriages.map(carriage =>
-              carriage.carriageId === carriageId
-                ? { ...carriage, filledSeats: newFilledSeats }
-                : carriage
-            ),
+  const [train2Data, setTrain2Data] = useState([
+    { carriageId: 1, filledSeats: 0 },
+    { carriageId: 2, filledSeats: 0 },
+  ]);
+
+  // button states at train1
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(false);
+  const [isSimulateDisabled, setIsSimulateDisabled] = useState(true);
+  const [isCounterDisabled, setIsCounterDisabled] = useState(false);
+  const [showColors, setShowColors] = useState(false);
+  const [isDataReceived, setIsDataReceived] = useState(false);
+
+  useEffect(() => {
+    const ws = new WebSocket('ws://localhost:8080');
+
+    ws.onopen = () => {
+      console.log('Connected to WebSocket server');
+    };
+
+    ws.onmessage = (event) => {
+      const message = event.data;
+      console.log('Message received:', message);
+
+      if (message === 'stop') {
+        console.log('Simulation has stopped!');
+        // enable buttons and counter after distribution finisehd
+        setIsSubmitDisabled(false);
+        setIsSimulateDisabled(false);
+        setIsCounterDisabled(false);
+      } else {
+        const parsedMessage = JSON.parse(message);
+        console.log("Parsed message:", parsedMessage);
+
+        const { trainId, carriageId, filledSeats } = parsedMessage;
+        console.log("trainId: ", trainId, "carriageId: ", carriageId, "filledSeats: ", filledSeats);
+
+        // Update train data only when 'showColors' is true
+        if (showColors) {
+          if (trainId === 1) {
+            setTrain1Data((prevData) =>
+              prevData.map((carriage) =>
+                carriage.carriageId === carriageId
+                  ? { ...carriage, filledSeats }
+                  : carriage
+              )
+            );
+          } else if (trainId === 2) {
+            setTrain2Data((prevData) =>
+              prevData.map((carriage) =>
+                carriage.carriageId === carriageId
+                  ? { ...carriage, filledSeats }
+                  : carriage
+              )
+            );
           }
-        : train
+        }
+        setIsDataReceived(true);
+      }
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket connection closed');
+    };
+
+    return () => {
+      ws.close();
+    };
+  }, [showColors]);
+
+  const handleUpdateSeatsTrain1 = (carriageId, newFilledSeats) => {
+    setTrain1Data((prevData) =>
+      prevData.map((carriage) =>
+        carriage.carriageId === carriageId
+          ? { ...carriage, filledSeats: newFilledSeats }
+          : carriage
+      )
     );
-  
-    setTrainData(updatedTrainData); 
   };
 
-  // Log trainData after it's updated
+  const handleUpdateSeatsTrain2 = (carriageId, newFilledSeats) => {
+    setTrain2Data((prevData) =>
+      prevData.map((carriage) =>
+        carriage.carriageId === carriageId
+          ? { ...carriage, filledSeats: newFilledSeats }
+          : carriage
+      )
+    );
+  };
+
+  // log when trainData is updated
   useEffect(() => {
-    console.log("Updated trainData: ", trainData);
-  }, [trainData]);
+    console.log('Updated Train 1 Data:', train1Data);
+    console.log('Updated Train 2 Data:', train2Data);
+  }, [train1Data, train2Data]);
+
+  const handleSubmit = () => {
+    const ws = new WebSocket('ws://localhost:8080');
+
+    ws.onopen = () => {
+      console.log('WebSocket connection opened, sending data...');
+
+      const train1Seats = train1Data.map(carriage => carriage.filledSeats).join('');
+      const train2Seats = train2Data.map(carriage => carriage.filledSeats).join('');
+      const combinedMessage = train1Seats + train2Seats;
+
+      // Send the message to the WebSocket server
+      ws.send(combinedMessage);
+      // ws.send(train1Seats);
+      console.log('Submitted:', combinedMessage);
+    };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket connection closed after sending data');
+    };
+    
+    setIsSubmitDisabled(true);
+    setIsSimulateDisabled(false);
+    setIsCounterDisabled(true);
+  };
+
+  const handleStart = () => {
+    const ws = new WebSocket('ws://localhost:8080');
+
+    ws.onopen = () => {
+      console.log('WebSocket connection opened, sending data...');
+      console.log('Sending "start" message to Websocket server');
+      ws.send('start');
+    }
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
+    ws.onclose = () => {
+      console.log('WebSocket connection closed after sending data');
+    };
+
+    setIsSubmitDisabled(true);
+    setIsSimulateDisabled(true);
+    setIsCounterDisabled(true);
+    setShowColors(true);
+    setIsDataReceived(false);
+  };
 
   return (
     <div className='Mainpage'>
@@ -50,26 +180,38 @@ function MainPage() {
 
       <div className='content'>
         <div className='train-container'>
-          <h2 className='train-title'>TRAIN 1</h2>
-          <Train 
-            carriages={trainData[0].carriages}
-            onUpdateSeats={(carriageId, newFilledSeats) => handleUpdateSeats(0, carriageId, newFilledSeats)}  
+          <h2 className="train-title">TRAIN 1</h2>
+          <Train
+            carriages={train1Data}
+            onUpdateSeats={(carriageId, newFilledSeats) => handleUpdateSeatsTrain1(carriageId, newFilledSeats)}
+            isDisabled={isCounterDisabled}
+            showColors={showColors && isDataReceived}
           />
+          <div className='train-buttons'>
+            <button className='submit-button' onClick={handleSubmit} disabled={isSubmitDisabled}>Submit</button>
+            <button className='simulate-button' onClick={handleStart} disabled={isSimulateDisabled}>Simulate</button>
+          </div>
         </div>
-        <div className='train-container'>
-          <h2 className='train-title'>TRAIN 2</h2>
-          <Train 
-            carriages={trainData[1].carriages} 
-            onUpdateSeats={(carriageId, newFilledSeats) => handleUpdateSeats(1, carriageId, newFilledSeats)} 
+        <div className="train-container">
+          <h2 className="train-title">TRAIN 2</h2>
+          <Train
+            carriages={train2Data}
+            onUpdateSeats={(carriageId, newFilledSeats) => handleUpdateSeatsTrain2(carriageId, newFilledSeats)}
+            isDisabled={isCounterDisabled}
+            showColors={showColors && isDataReceived}
           />
+          <div className='train-buttons'>
+            <button className='submit-button' onClick={handleSubmit} disabled={isSubmitDisabled}>Submit</button>
+            <button className='simulate-button' onClick={handleStart} disabled={isSimulateDisabled}>Simulate</button>
+          </div>
         </div>
       </div>
 
-      <div className='buttons'>
-        <button className='submit-button'>Submit</button>
+      {/* <div className='buttons'>
+        <button className='submit-button' onClick={handleSubmit} disabled={isSubmitDisabled}>Submit</button>
         <RightArrow />
-        <button className='simulate-button'>Simulate</button>
-      </div>
+        <button className='simulate-button' onClick={handleStart} disabled={isSimulateDisabled}>Simulate</button>
+      </div> */}
     </div>
   );
 }

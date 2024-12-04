@@ -34,7 +34,7 @@
 }
 
 .first-seats-container {
-    position: absolute; /* Position the seats container absolutely within the carriage */
+    position: absolute; 
     width: 100%;
     height: 100%; 
     display: flex; 

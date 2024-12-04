@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './counter.css';
 
-const Counter = ({ initialValue = 0, min = 0, max = 8, onCountChange }) => {
+const Counter = ({ initialValue = 0, min = 0, max = 8, onCountChange, disabled }) => {
   // onCountChange -> pass updated value
   const [count, setCount] = useState(initialValue);
 
+  useEffect(() => {
+    setCount(initialValue);
+  }, [initialValue]);
+
   const increment = () => {
-    if (count < max) {
+    if (count < max && !disabled) {
       const newCount = count + 1;
       setCount(newCount);
       onCountChange(newCount);
@@ -14,7 +18,7 @@ const Counter = ({ initialValue = 0, min = 0, max = 8, onCountChange }) => {
   };
 
   const decrement = () => {
-    if (count > min) {
+    if (count > min && !disabled) {
       const newCount = count - 1;
       setCount(newCount);
       onCountChange(newCount);
@@ -23,9 +27,9 @@ const Counter = ({ initialValue = 0, min = 0, max = 8, onCountChange }) => {
 
   return (
     <div className="counter">
-      <button className="counter-button" onClick={decrement}>−</button>
+      <button className="counter-button" onClick={decrement} disabled={disabled}>−</button>
       <span className="counter-value">{count}</span>
-      <button className="counter-button" onClick={increment}>+</button>
+      <button className="counter-button" onClick={increment} disabled={disabled}>+</button>
     </div>
   );
 };
