@@ -1,0 +1,10 @@
+[package]
+name = "train-mqtt"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aws-iot-device-sdk-rust = { version = "0.4.1", features = ["sync"]}
+tokio = { version = "1", features = ["full"] }
+base64 = "0.22.1"
+minreq = "2.12.0"
