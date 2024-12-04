@@ -1,4 +1,9 @@
 .App {
   text-align: center;
   background-color: #FFFDF6;
+  position: fixed;
+  bottom: 0;
+  top: 0;
+  right: 0;
+  left: 0;  
 }
