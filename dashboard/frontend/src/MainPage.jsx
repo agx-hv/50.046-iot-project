@@ -3,6 +3,9 @@ import Train from './components/Train/Train.jsx';
 import { useEffect, useState } from 'react';
 
 function MainPage() {
+  // change local IP Address 
+  const ip = "192.168.110.70";
+
   const instructionList=  ['Select the number of lights to turn on for each carriage on both trains.',
                             'Click the "Submit" button to set the initial number of lights.',
                             'Click the "Simulate" button to run the crowd distribution simulation based on the selected lights.'
@@ -34,7 +37,7 @@ function MainPage() {
 
   // Connect to Websocket for Train 1
   useEffect(() => {
-    const ws1 = new WebSocket('ws://localhost:8080/train1');
+    const ws1 = new WebSocket('ws://' + ip + ':8080/train1');
 
     ws1.onopen = () => {
       console.log('Connected to WebSocket train 1');
@@ -82,11 +85,11 @@ function MainPage() {
     return () => {
       ws1.close();
     };
-  }, [showColors1]);
+  }, [showColors1, ip]);
 
-  // Connect to Websocket for Train 1
+  // Connect to Websocket for Train 2
   useEffect(() => {
-    const ws2 = new WebSocket('ws://localhost:8080/train1');
+    const ws2 = new WebSocket('ws://' + ip + ':8080/train1');
 
     ws2.open = () => {
       console.log('Connected to WebSocket train 1');
@@ -133,7 +136,7 @@ function MainPage() {
     return () => {
       ws2.close();
     };
-  }, [showColors2]);
+  }, [showColors2, ip]);
 
   const handleUpdateSeatsTrain1 = (carriageId, newFilledSeats) => {
     setTrain1Data((prevData) =>
@@ -156,7 +159,7 @@ function MainPage() {
   };
 
   const handleSubmitTrain1 = () => {
-    const ws1 = new WebSocket('ws://localhost:8080');
+    const ws1 = new WebSocket('ws://' + ip + ':8080');
 
     ws1.onopen = () => {
       console.log('WebSocket connection opened, sending data...');
@@ -184,7 +187,7 @@ function MainPage() {
   };
 
   const handleStartTrain1 = () => {
-    const ws1 = new WebSocket('ws://localhost:8080');
+    const ws1 = new WebSocket('ws://' + ip + ':8080');
 
     ws1.onopen = () => {
       console.log('WebSocket connection opened, sending data...');
@@ -208,7 +211,7 @@ function MainPage() {
   };
 
   const handleSubmitTrain2 = () => {
-    const ws2 = new WebSocket('ws://localhost:8080');
+    const ws2 = new WebSocket('ws://' + ip + ':8080');
 
     ws2.onopen = () => {
       console.log('WebSocket connection opened, sending data...');
@@ -238,7 +241,7 @@ function MainPage() {
   };
 
   const handleStartTrain2 = () => {
-    const ws2 = new WebSocket('ws://localhost:8080');
+    const ws2 = new WebSocket('ws://' + ip + ':8080');
 
     ws2.onopen = () => {
       console.log('WebSocket connection opened, sending data...');
