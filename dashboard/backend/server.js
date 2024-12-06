@@ -2,7 +2,7 @@ const { mqtt, io, iot } = require('aws-iot-device-sdk-v2');
 const WebSocket = require('ws');
 
 // AWS IoT connection details
-const ENDPOINT = "a63zbtzd78225-ats.iot.ap-southeast-1.amazonaws.com";
+const ENDPOINT = "a2l6s1mki54p61-ats.iot.ap-southeast-1.amazonaws.com";
 const CLIENT_ID = "MyMQTTClient";
 const CERT_PATH = "./cert/device-certificate.pem.crt";
 const KEY_PATH = "./cert/private.pem.key";
