@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: frontend-deployment
 spec:
-  replicas: 3  # Number of replicas
+  replicas: 3 
   selector:
     matchLabels:
       app: frontend
@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: <your-frontend-image-name>  # Replace with your image name
+          image: zhiyanggg/frontend:latest
           ports:
             - containerPort: 8081
 ---
@@ -29,4 +29,4 @@ spec:
     - protocol: TCP
       port: 8081
       targetPort: 8081
-  type: LoadBalancer  # or "ClusterIP" depending on your use case
+  type: LoadBalancer
