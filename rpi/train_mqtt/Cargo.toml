@@ -8,3 +8,7 @@ aws-iot-device-sdk-rust = { version = "0.4.1", features = ["sync"]}
 tokio = { version = "1", features = ["full"] }
 base64 = "0.22.1"
 minreq = "2.12.0"
+<<<<<<< HEAD
+=======
+rand = "0.8.5"
+>>>>>>> a87cd6ee854b51c96826e6bd95e518ca4838a174
