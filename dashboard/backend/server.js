@@ -3,7 +3,8 @@ const WebSocket = require('ws');
 
 // AWS IoT connection details
 const ENDPOINT = "a2l6s1mki54p61-ats.iot.ap-southeast-1.amazonaws.com";
-const CLIENT_ID = "MyMQTTClient";
+const CLIENT_ID = Math.floor(Math.random()*10000000000).toString();
+console.log(CLIENT_ID);
 const CERT_PATH = "/backend/cert/device-certificate.pem.crt";
 const KEY_PATH = "/backend/cert/private.pem.key";
 const CA_PATH = "/backend/cert/AmazonRootCA1.pem";

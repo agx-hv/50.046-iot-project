@@ -4,12 +4,13 @@ import numpy as np
 import paho.mqtt.client as mqtt
 import os
 import ssl
+import random
 
 # AWS IoT Endpoint
 BROKER = "a2l6s1mki54p61-ats.iot.ap-southeast-1.amazonaws.com"
-# BROKER = "a63zbtzd78225-ats.iot.ap-southeast-1.amazonaws.com"  # Ian's endpoint
 PORT = 8883
-CLIENT_ID = "led_detect"
+CLIENT_ID = str(random.randrange(0, 10000000000))
+
 INPUT_TOPIC1 = "video/frames/train1/car1"
 INPUT_TOPIC2 = "video/frames/train1/car2"
 INPUT_TOPIC3 = "video/frames/train2/car1"
@@ -38,7 +39,7 @@ def detect_leds(frame):
     hsv_img = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     
     # HSV range for detecting our red LEDs
-    lower_limit = np.array([0, 50, 160]) 
+    lower_limit = np.array([0, 50, 130]) 
     upper_limit = np.array([180, 255, 255])
     mask = cv2.inRange(hsv_img, lower_limit, upper_limit)
 
@@ -100,18 +101,18 @@ def on_message(client, userdata, msg):
         if msg.topic == INPUT_TOPIC1:
             output_topic = OUTPUT_TOPIC1
             # cv2.imshow("train1_original", frame_original)
-            cv2.imshow("train1", frame)
+            # cv2.imshow("train1", frame)
         elif msg.topic == INPUT_TOPIC2:
             output_topic = OUTPUT_TOPIC2
             # cv2.imshow("train2_original", frame_original)
-            cv2.imshow("train2", frame)
+            # cv2.imshow("train2", frame)
         elif msg.topic == INPUT_TOPIC3:
             output_topic = OUTPUT_TOPIC3
             # cv2.imshow("train3_original", frame_original)
-            cv2.imshow("train3", frame)
+            # cv2.imshow("train3", frame)
         elif msg.topic == INPUT_TOPIC4:
             output_topic = OUTPUT_TOPIC4
-            cv2.imshow("train4", frame)
+            # cv2.imshow("train4", frame)
 
         # cv2.imshow("frame", frame)
         cv2.waitKey(1)
