@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 
 function MainPage() {
   // change local IP Address 
-  const ip = "192.168.110.70";
+  //const ip = "192.168.110.70";
+  const ip = "localhost";
 
   const instructionList=  ['Select the number of lights to turn on for each carriage on both trains.',
                             'Click the "Submit" button to set the initial number of lights.',
@@ -89,7 +90,7 @@ function MainPage() {
 
   // Connect to Websocket for Train 2
   useEffect(() => {
-    const ws2 = new WebSocket('ws://' + ip + ':8080/train1');
+    const ws2 = new WebSocket('ws://' + ip + ':8080/train2');
 
     ws2.open = () => {
       console.log('Connected to WebSocket train 1');

@@ -1,0 +1,18 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
+      - "8081:8081"  # Expose frontend on port 8081
+    depends_on:
+      - backend  # Ensure the backend service starts before the frontend
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8080:8080"  # Expose backend on port 8080
+    environment:
+      - NODE_ENV=production

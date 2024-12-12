@@ -4,9 +4,12 @@ const WebSocket = require('ws');
 // AWS IoT connection details
 const ENDPOINT = "a2l6s1mki54p61-ats.iot.ap-southeast-1.amazonaws.com";
 const CLIENT_ID = "MyMQTTClient";
-const CERT_PATH = "./cert/device-certificate.pem.crt";
-const KEY_PATH = "./cert/private.pem.key";
-const CA_PATH = "./cert/AmazonRootCA1.pem";
+const CERT_PATH = "/backend/cert/device-certificate.pem.crt";
+const KEY_PATH = "/backend/cert/private.pem.key";
+const CA_PATH = "/backend/cert/AmazonRootCA1.pem";
+//const CERT_PATH = "./cert/device-certificate.pem.crt";
+//const KEY_PATH = "./cert/private.pem.key";
+//const CA_PATH = "./cert/AmazonRootCA1.pem";
 
 // MQTT Topics
 const PUBLISH_TOPICS = [

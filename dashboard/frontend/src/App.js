@@ -1,5 +1,5 @@
 import './App.css';
-import MainPage from './MainPage';
+import MainPage from './MainPage.jsx';
 import TrainTest from './TrainTest.jsx';
 
 function App() {
