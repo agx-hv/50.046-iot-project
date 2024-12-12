@@ -5,14 +5,40 @@ use std::thread;
 use std::time::Duration;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU8, Ordering};
+use std::env;
 
-const TRAIN_ID: &str = "train1";
-const C1_IP: &str = "192.168.137.5";
-const C2_IP: &str = "192.168.137.65";
-//const C1_IP: &str = "192.168.137.162";
-//const C2_IP: &str = "192.168.137.150";
+const T1C1_IP: &str = "192.168.137.245";
+const T1C2_IP: &str = "192.168.137.223";
+const T2C1_IP: &str = "192.168.137.51";
+const T2C2_IP: &str = "192.168.137.119";
 
 fn main() -> Result<(), Box<dyn Error>> {
+    let mut TRAIN_ID = "";
+    let mut C1_IP = "";
+    let mut C2_IP = "";
+    match env::args().last().as_deref() {
+        Some("1") => {
+            println!("This is Train 1");
+            TRAIN_ID = "train1";
+            C1_IP = T1C1_IP;
+            C2_IP = T1C2_IP;
+        },
+        Some("2") => {
+            println!("This is Train 2");
+            TRAIN_ID = "train2";
+            C1_IP = T2C1_IP;
+            C2_IP = T2C2_IP;
+        },
+        Some(v) => {
+            println!("Invalid Argument: {v}");
+            return Ok(());
+        }
+        None => {
+            println!("No Arguments!");
+            return Ok(());
+        }
+    };
+
     let start = Arc::new(AtomicU8::new(0));
     let c1_cv_count = Arc::new(AtomicU8::new(0));
     let c2_cv_count = Arc::new(AtomicU8::new(0));
@@ -23,12 +49,14 @@ fn main() -> Result<(), Box<dyn Error>> {
     let start = Arc::new(AtomicU8::new(0));
     let start_w = start.clone();
 
+    let rand_id = rand::random::<u64>();
+    dbg!(rand_id);
     let aws_settings = AWSIoTSettings::new(
-        TRAIN_ID.to_owned(),
+        format!("{}-{}",rand_id,TRAIN_ID).to_owned(),
         "AmazonRootCA1.pem".to_owned(),
         "device-certificate.pem.crt".to_owned(),
         "private.pem.key".to_owned(),
-        "a63zbtzd78225-ats.iot.ap-southeast-1.amazonaws.com".to_owned(),
+        "a2l6s1mki54p61-ats.iot.ap-southeast-1.amazonaws.com".to_owned(),
         None,
     );
 
@@ -83,7 +111,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 
                     if p.topic == format!("pub/{}/init", TRAIN_ID) {
                         dbg!("INIT");
-                        //dbg!(&p.payload);
+                        dbg!(&p.payload);
                         minreq::get(format!("http://{}/setleds?d={}", C1_IP, std::str::from_utf8(&p.payload[0..1]).unwrap())).send();
                         minreq::get(format!("http://{}/setleds?d={}", C2_IP, std::str::from_utf8(&p.payload[1..2]).unwrap())).send();
                     }
